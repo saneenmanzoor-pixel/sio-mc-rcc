@@ -5,8 +5,11 @@ export default function DataCard({ unit, data }) {
 
   const d = data[unit];
   const target = UNITS[unit];
-  const percentage = ((d.total / target) * 100).toFixed(2);
-  const remaining = target - d.total;
+  const hasTarget = typeof target === "number";
+  const percentage = hasTarget
+  ? ((d.total / target) * 100).toFixed(2)
+  : null;
+  const remaining = hasTarget ? target - d.total : null;
 
   const text = `
 Unit: ${unit}
@@ -20,7 +23,13 @@ Remaining Amount: ₹${remaining}
   return (
     <div className="data-card">
       <p><b>Unit:</b> {unit}</p>
-      <p><b>Target:</b> ₹{target}</p>
+      {hasTarget && (
+        <>  
+          <p><b>Target:</b> ₹{target}</p>
+          <p><b>Percentage:</b> {percentage}%</p>
+          <p><b>Remaining Amount:</b> ₹{remaining}</p>
+        </>
+      )}
       <p><b>Total Collected:</b> ₹{d.total}</p>
       <p><b>Today's Collection:</b> ₹{d.today}</p>
       <p><b>Percentage:</b> {percentage}%</p>

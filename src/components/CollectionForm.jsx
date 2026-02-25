@@ -23,7 +23,10 @@ export default function CollectionForm({
         </select>
 
       <label>Target Amount (₹)</label>
-      <input value={UNITS[unit]} disabled />
+        <input
+          value={UNITS[unit] ?? ""}
+          readOnly
+        />
 
       <label>Total Collected (₹)</label>
       <input value={total} disabled />

@@ -7,4 +7,5 @@ export const UNITS = {
   Velliparambu: 17500,
   Olavanna: 25000,
   Palazhi: 5000,
+  Area: null,
 };
