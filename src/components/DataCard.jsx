@@ -26,14 +26,13 @@ Remaining Amount: ₹${remaining}
       {hasTarget && (
         <>  
           <p><b>Target:</b> ₹{target}</p>
+          <p><b>Today's Collection:</b> ₹{d.today}</p>
+          <p><b>Total Collected:</b> ₹{d.total}</p>
           <p><b>Percentage:</b> {percentage}%</p>
           <p><b>Remaining Amount:</b> ₹{remaining}</p>
         </>
       )}
-      <p><b>Total Collected:</b> ₹{d.total}</p>
-      <p><b>Today's Collection:</b> ₹{d.today}</p>
-
-
+      
       <button onClick={() => navigator.clipboard.writeText(text)}>
         Copy Text
       </button>
