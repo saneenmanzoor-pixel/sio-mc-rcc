@@ -5,48 +5,64 @@ import Summary from "./components/Summary";
 import DataCard from "./components/DataCard";
 import "./App.css";
 
+import { db } from "./firebase";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
+
 export default function App() {
   const [unit, setUnit] = useState("");
   const [today, setToday] = useState("");
-  const [data, setData] = useState(
-    JSON.parse(localStorage.getItem("collections")) || {}
-  );
+  const [data, setData] = useState({});
+  const [showData, setShowData] = useState(false);
 
-  const [showData, setShowData] = useState(false); // 👈 NEW
-
+  /* 🔥 REAL-TIME FIREBASE SYNC */
   useEffect(() => {
-    localStorage.setItem("collections", JSON.stringify(data));
-  }, [data]);
+    const unsub = onSnapshot(doc(db, "collections", "main"), (docSnap) => {
+      if (docSnap.exists()) {
+        setData(docSnap.data());
+      } else {
+        setData({});
+      }
+    });
+
+    return () => unsub();
+  }, []);
 
   const total = data[unit]?.total || 0;
 
-  const handleUpdate = () => {
-    if (!today) return;
+  /* ➕ ADD / UPDATE COLLECTION */
+  const handleUpdate = async () => {
+    if (!unit || !today) return;
 
-    setData({
+    const newData = {
       ...data,
       [unit]: {
         today: Number(today),
         total: total + Number(today),
         date: new Date().toLocaleDateString(),
       },
-    });
+    };
+
+    setData(newData);
+    await setDoc(doc(db, "collections", "main"), newData);
 
     setToday("");
-    setShowData(false); // hide data after update
+    setShowData(false);
   };
 
-  const resetUnit = (unit) => {
-  const confirmReset = window.confirm(
-    `Are you sure you want to reset data for ${unit}?`
-  );
+  /* 🔁 RESET UNIT DATA */
+  const resetUnit = async (unit) => {
+    const confirmReset = window.confirm(
+      `Are you sure you want to reset data for ${unit}?`
+    );
 
-  if (!confirmReset) return;
+    if (!confirmReset) return;
 
-  const newData = { ...data };
-  delete newData[unit];
-  setData(newData);
-};
+    const newData = { ...data };
+    delete newData[unit];
+
+    setData(newData);
+    await setDoc(doc(db, "collections", "main"), newData);
+  };
 
   return (
     <div className="app">
