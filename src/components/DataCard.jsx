@@ -32,8 +32,7 @@ Remaining Amount: ₹${remaining}
       )}
       <p><b>Total Collected:</b> ₹{d.total}</p>
       <p><b>Today's Collection:</b> ₹{d.today}</p>
-      <p><b>Percentage:</b> {percentage}%</p>
-      <p><b>Remaining Amount:</b> ₹{remaining}</p>
+
 
       <button onClick={() => navigator.clipboard.writeText(text)}>
         Copy Text
