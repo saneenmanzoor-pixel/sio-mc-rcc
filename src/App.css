@@ -14,6 +14,19 @@ body {
   overflow-x: hidden;
 }
 
+/* GLOBAL MOBILE OVERFLOW FIX */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden; /* 🔥 critical */
+}
+
 
 /* HEADER */
 .header {
