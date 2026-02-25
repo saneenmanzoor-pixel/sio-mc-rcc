@@ -1,20 +1,33 @@
-import { UNITS } from "../data/units";
-
 export default function Summary({ data, resetUnit }) {
-  const grandTotal = Object.values(data).reduce(
-    (sum, d) => sum + d.total,
+  // SAFETY: fallback to empty object
+  const safeData = data || {};
+
+  const sortedUnits = Object.entries(safeData).sort(
+    (a, b) => (b[1]?.total || 0) - (a[1]?.total || 0)
+  );
+
+  const grandTotal = sortedUnits.reduce(
+    (sum, [, value]) => sum + (value?.total || 0),
     0
   );
 
   return (
     <div className="summary">
-      {Object.keys(UNITS).map((u) => (
-        <div key={u} className="summary-row">
-          <span>{u}</span>
-          <span className="amount">₹ {(data[u]?.total || 0).toLocaleString()}</span>
-          <button onClick={() => resetUnit(u)}>Reset</button>
+      {sortedUnits.map(([unit, value], index) => (
+        <div className="summary-row" key={unit}>
+          <span className="unit-name">
+            {index === 0 && "🥇 "}
+            {index === 1 && "🥈 "}
+            {index === 2 && "🥉 "}
+            {unit}
+          </span>
+
+          <span className="amount">₹ {value?.total || 0}</span>
+
+          <button onClick={() => resetUnit(unit)}>Reset</button>
         </div>
       ))}
+
       <h3>Grand Total: ₹ {grandTotal}</h3>
     </div>
   );
