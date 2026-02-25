@@ -47,7 +47,7 @@ body {
 .header h1 {
   margin: 14px 0 6px;
   font-size: 26px;
-  color: #1e40af;
+  color: #2563eb;
 }
 
 .header p {
@@ -170,7 +170,7 @@ button {
 .summary h3 {
   margin-top: 12px;
   text-align: right;
-  color: #1e40af;
+  color: #2563eb;
 }
 
 /* DATA CARD */
