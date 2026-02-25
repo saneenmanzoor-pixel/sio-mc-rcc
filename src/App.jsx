@@ -36,11 +36,17 @@ export default function App() {
     setShowData(false); // hide data after update
   };
 
-  const resetUnit = (u) => {
-    const newData = { ...data };
-    delete newData[u];
-    setData(newData);
-  };
+  const resetUnit = (unit) => {
+  const confirmReset = window.confirm(
+    `Are you sure you want to reset data for ${unit}?`
+  );
+
+  if (!confirmReset) return;
+
+  const newData = { ...data };
+  delete newData[unit];
+  setData(newData);
+};
 
   return (
     <div className="app">
