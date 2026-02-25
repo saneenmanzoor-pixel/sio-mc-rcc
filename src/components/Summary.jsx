@@ -4,7 +4,7 @@ export default function Summary({ data, resetUnit }) {
   const GRAND_TOTAL_TARGET = 240000;
   const safeData = data || {};
 
-  // SORT BY PERCENTAGE (Area goes last)
+  // SORT BY PERCENTAGE (units without target like Area go last)
   const sortedUnits = Object.entries(safeData).sort((a, b) => {
     const [unitA, valueA] = a;
     const [unitB, valueB] = b;
@@ -19,7 +19,7 @@ export default function Summary({ data, resetUnit }) {
     const percentA = ((valueA?.total || 0) / targetA) * 100;
     const percentB = ((valueB?.total || 0) / targetB) * 100;
 
-    return percentB - percentA;
+    return percentB - percentA; // highest % first
   });
 
   // GRAND TOTAL
@@ -32,27 +32,41 @@ export default function Summary({ data, resetUnit }) {
 
   return (
     <div className="summary">
-      {sortedUnits.map(([unit, value], index) => (
-        <div className="summary-row" key={unit}>
-          <span className="unit-name">
-            {index === 0 && "🥇 "}
-            {index === 1 && "🥈 "}
-            {index === 2 && "🥉 "}
-            {unit}
-          </span>
+      {sortedUnits.map(([unit, value], index) => {
+        const target = UNITS[unit];
+        const percentage =
+          target && value?.total
+            ? ((value.total / target) * 100).toFixed(1)
+            : null;
 
-          <span className="amount">₹ {value?.total || 0}</span>
+        return (
+          <div className="summary-row" key={unit}>
+            <span className="unit-name">
+              {index === 0 && "🥇 "}
+              {index === 1 && "🥈 "}
+              {index === 2 && "🥉 "}
+              {unit}
+            </span>
 
-          <button onClick={() => resetUnit(unit)}>Reset</button>
-        </div>
-      ))}
+            <span className="amount">
+              ₹ {value?.total || 0}
+              {percentage && (
+                <span className="percent"> • {percentage}%</span>
+              )}
+            </span>
+
+            <button onClick={() => resetUnit(unit)}>Reset</button>
+          </div>
+        );
+      })}
 
       <div className="grand-total">
         <p>
           <strong>Grand Total:</strong> ₹ {grandTotal.toLocaleString()}
         </p>
         <p>
-          <strong>Grand Target:</strong> ₹ {GRAND_TOTAL_TARGET.toLocaleString()}
+          <strong>Grand Target:</strong> ₹{" "}
+          {GRAND_TOTAL_TARGET.toLocaleString()}
         </p>
         <p>
           <strong>Achieved:</strong> {grandPercentage}%
