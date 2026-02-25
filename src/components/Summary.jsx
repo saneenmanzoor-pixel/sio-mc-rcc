@@ -1,15 +1,18 @@
 export default function Summary({ data, resetUnit }) {
   // SAFETY: fallback to empty object
+  const GRAND_TOTAL_TARGET = 240000;
   const safeData = data || {};
 
   const sortedUnits = Object.entries(safeData).sort(
     (a, b) => (b[1]?.total || 0) - (a[1]?.total || 0)
   );
 
-  const grandTotal = sortedUnits.reduce(
-    (sum, [, value]) => sum + (value?.total || 0),
+  const grandTotal = Object.values(data || {}).reduce(
+    (sum, value) => sum + (value?.total || 0),
     0
   );
+
+  const grandPercentage = ((grandTotal / GRAND_TOTAL_TARGET) * 100).toFixed(2);
 
   return (
     <div className="summary">
@@ -28,7 +31,11 @@ export default function Summary({ data, resetUnit }) {
         </div>
       ))}
 
-      <h3>Grand Total: ₹ {grandTotal}</h3>
+      <div className="grand-total">
+        <p><strong>Grand Total:</strong> ₹ {grandTotal.toLocaleString()}</p>
+        <p><strong>Grand Target:</strong> ₹ {GRAND_TOTAL_TARGET.toLocaleString()}</p>
+        <p><strong>Achieved:</strong> {grandPercentage}%</p>
+      </div>
     </div>
   );
 }

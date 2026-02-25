@@ -238,3 +238,14 @@ input[type="number"] {
   width: 140px;
 }
 
+.grand-total {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #cbd5f5;
+  text-align: right;
+}
+
+.grand-total p {
+  margin: 6px 0;
+  font-size: 15px;
+}
