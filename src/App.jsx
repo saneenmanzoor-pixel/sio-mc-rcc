@@ -16,16 +16,14 @@ export default function App() {
 
   /* 🔥 REAL-TIME FIREBASE SYNC */
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "collections", "main"), (docSnap) => {
-      if (docSnap.exists()) {
-        setData(docSnap.data());
-      } else {
-        setData({});
-      }
-    });
+  const unsub = onSnapshot(doc(db, "collections", "main"), (docSnap) => {
+    if (docSnap.exists()) {
+      setData(docSnap.data());
+    }
+  });
 
-    return () => unsub();
-  }, []);
+  return () => unsub();
+}, []);
 
   const total = data[unit]?.total || 0;
 
@@ -43,7 +41,7 @@ export default function App() {
     };
 
     setData(newData);
-    await setDoc(doc(db, "collections", "main"), newData);
+    await setDoc(doc(db, "collections", "main"), newData, { merge: true });
 
     setToday("");
     setShowData(false);
@@ -61,7 +59,7 @@ export default function App() {
     delete newData[unit];
 
     setData(newData);
-    await setDoc(doc(db, "collections", "main"), newData);
+    await setDoc(doc(db, "collections", "main"), newData, { merge: true });
   };
 
   return (
